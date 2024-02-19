@@ -115,7 +115,7 @@ const Editor = () => {
               style={{ display: id ? "none" : "block" }}
               spellCheck="false"
               ref={textareaRef}
-              placeholder="Type your text here..."
+              placeholder="</> Paste, save, share! (Pasting just a URL will shorten it!)"
             />
             <pre className={styles.codespace__pre}>
               <code
