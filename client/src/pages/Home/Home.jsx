@@ -9,6 +9,7 @@ const Home = () => {
       <Routes>
         <Route path="/" element={<Editor />} />
         <Route path="/:id" element={<Editor />} />
+        <Route path="/r/:id" element={<Editor />} />
       </Routes>
     </div>
   );

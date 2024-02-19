@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Prism from "prismjs";
 import styles from "./Editor.module.css";
 import "../prism-themes/prism-gruvbox-dark.css";
-import { SERVER_BASE_URL } from "../../utils/constants";
+import { CLIENT_BASE_URL, SERVER_BASE_URL, URL_REGEX } from "../../utils/constants";
 import Header from "../Header/Header";
 
 const Editor = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [text, setText] = useState("");
   const [language, setLanguage] = useState("none");
   const textareaRef = useRef(null);
@@ -60,8 +61,17 @@ const Editor = () => {
       const response = await fetch(`${SERVER_BASE_URL}/bin/${id}`);
       const data = await response.json();
       if (response.ok) {
-        setLanguage(data.language);
-        setText(data.content);
+        const isURL = URL_REGEX.test(data.content);
+        if (isURL) {
+          setText(`Your shortened URL: ${CLIENT_BASE_URL}/r/${id}`);
+          if (location.pathname === `/r/${id}`) {
+            window.location.href = data.content;
+          }
+        }
+        else {
+          setLanguage(data.language);
+          setText(data.content);
+        }
       }
     };
 
