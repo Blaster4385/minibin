@@ -23,3 +23,6 @@ minibin
 
 # Go workspace file
 go.work
+
+# Vite output directory
+dist/

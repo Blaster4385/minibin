@@ -1,24 +1,22 @@
 package main
 
 import (
-	"database/sql"
-	"encoding/json"
+	"embed"
 	"flag"
-	"fmt"
-	"io/ioutil"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"database/sql"
 	"log"
 	"math/rand"
 	"net/http"
-	"strings"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/rs/cors"
 )
 
 var db *sql.DB
-var port int
 var dbFilePath string
+var port string
 
 type Bin struct {
 	Content  string `json:"content"`
@@ -30,23 +28,33 @@ const (
 	shortIDLength  = 8
 )
 
-func main() {
-	flag.IntVar(&port, "port", 8080, "Port number for the server (default is 8080)")
-	flag.StringVar(&dbFilePath, "db", "./minibin.db", "Database file path")
-	flag.Parse()
+var (
+	//go:embed all:dist
+	dist embed.FS
+)
 
-	setupServer()
+func RegisterHandlers(e *echo.Echo) {
+	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+		Skipper: nil,
+		Root: "dist",
+		Index: "index.html",
+		HTML5:      true,
+		Filesystem: http.FS(dist),
+	}))
+	e.Use(middleware.CORS())
+	e.POST("/bin", postBin)
+	e.GET("/bin/:id", getBin)
 }
 
-func setupServer() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/bin", postBin)
-	mux.HandleFunc("/bin/", getBin)
-	handler := cors.Default().Handler(mux)
-	serverAddr := fmt.Sprintf(":%d", port)
-	log.Printf("Server listening on port %d...\n", port)
+func main() {
+	flag.StringVar(&port, "port", "8080", "HTTP server port")
+	flag.StringVar(&dbFilePath, "db", "minibin.db", "Path to SQLite database file")
+	flag.Parse()
+
 	initDatabase()
-	log.Fatal(http.ListenAndServe(serverAddr, handler))
+	e := echo.New()
+	RegisterHandlers(e)
+	e.Logger.Fatal(e.Start(":" + port))
 }
 
 func initDatabase() {
@@ -62,68 +70,40 @@ func initDatabase() {
 	}
 }
 
-func postBin(w http.ResponseWriter, r *http.Request) {
-	handleRequestMethod(w, r, "POST", func() {
-		body, err := ioutil.ReadAll(r.Body)
-		if handleError(w, err, http.StatusInternalServerError) {
-			return
-		}
-		var bin Bin
-		err = json.Unmarshal(body, &bin)
-		if handleError(w, err, http.StatusBadRequest) {
-			return
-		}
-		id := generateShortID()
-		handleError(w, saveBin(id, bin), http.StatusInternalServerError)
-		respondWithJSON(w, http.StatusOK, map[string]string{"id": id, "content": bin.Content, "language": bin.Language})
-	})
-}
-
-func getBin(w http.ResponseWriter, r *http.Request) {
-	handleRequestMethod(w, r, "GET", func() {
-		id := strings.TrimPrefix(r.URL.Path, "/bin/")
-		bin, err := getBinById(id)
-		handleError(w, err, http.StatusInternalServerError)
-		respondWithJSON(w, http.StatusOK, bin)
-	})
-}
-
-func handleRequestMethod(w http.ResponseWriter, r *http.Request, expectedMethod string, handler func()) {
-	if r.Method != expectedMethod {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-	handler()
-}
-
-func handleError(w http.ResponseWriter, err error, statusCode int) bool {
+func postBin(echoContext echo.Context) error {
+	bin := Bin{}
+	err := echoContext.Bind(&bin)
 	if err != nil {
-		http.Error(w, err.Error(), statusCode)
-		return true
+		return err
 	}
-	return false
+	id := generateShortID()
+	err = saveBin(id, bin)
+	if err != nil {
+		return err
+	}
+	return echoContext.JSON(http.StatusCreated, echo.Map{
+		"id": id,
+	})
 }
 
-func respondWithJSON(w http.ResponseWriter, statusCode int, data interface{}) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(statusCode)
-	json.NewEncoder(w).Encode(data)
+func getBin(echoContext echo.Context) error {
+	id := echoContext.Param("id")
+	bin, err := getBinById(id)
+	if err != nil {
+		return err
+	}
+	return echoContext.JSON(http.StatusOK, bin)
 }
 
 func createTable() error {
-	_, err := db.Exec(`
-	CREATE TABLE IF NOT EXISTS bins (
-		id TEXT PRIMARY KEY,
-		content TEXT,
-		language TEXT
-	)
-`)
+	_, err := db.Exec("CREATE TABLE IF NOT EXISTS bins (id TEXT PRIMARY KEY, content TEXT, language TEXT)")
 	return err
 }
 
 func getBinById(id string) (Bin, error) {
-	var bin Bin
-	err := db.QueryRow("SELECT content, language FROM bins WHERE id = ?", id).Scan(&bin.Content, &bin.Language)
+	row := db.QueryRow("SELECT content, language FROM bins WHERE id = ?", id)
+	bin := Bin{}
+	err := row.Scan(&bin.Content, &bin.Language)
 	return bin, err
 }
 
