@@ -85,5 +85,24 @@
 .btn__icon {
   height: 3rem;
   width: 3rem;
-  filter: invert(11%) sepia(0%) saturate(0%) hue-rotate(158deg) brightness(100%) contrast(88%);
+  filter: invert(11%) sepia(0%) saturate(0%) hue-rotate(158deg) brightness(100%)
+    contrast(88%);
+}
+
+@media screen and (max-width: 768px) {
+  .editor {
+    padding: 20px 20px 0 20px;
+  }
+
+  .btn__save {
+    bottom: 2rem;
+    right: 2rem;
+    height: 4rem;
+    width: 4rem;
+  }
+
+  .btn__icon {
+    height: 2rem;
+    width: 2rem;
+  }
 }

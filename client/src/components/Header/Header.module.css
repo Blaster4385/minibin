@@ -13,3 +13,13 @@
 .header__mini{
   color: var(--color-yellow);
 }
+
+@media screen and (max-width: 480px) {
+  .header {
+    margin: 0.5rem 1rem;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+}
