@@ -38,7 +38,7 @@
 .line__numbers {
   display: flex;
   flex-direction: column;
-  padding: 0px 20px 0px 0px;
+  padding-right: 20px;
   overflow-y: auto;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .line__number {
-  margin: 0px;
+  margin: 0;
   font-size: 16px;
   line-height: 1.5rem;
   text-align: right;
@@ -74,7 +74,7 @@
   resize: none;
   border: none;
   outline: none;
-  padding: 0px;
+  padding: 0;
   overflow-y: auto;
 }
 

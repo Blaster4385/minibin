@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Prism from "prismjs";
 import styles from "./Editor.module.css";
@@ -6,8 +6,8 @@ import "../prism-themes/prism-gruvbox-dark.css";
 import { SERVER_BASE_URL, SUPPORTED_LANGUAGES } from "../../utils/constants";
 
 const Editor = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const params = useParams();
   const [text, setText] = useState("");
   const [language, setLanguage] = useState("js");
   const textareaRef = useRef(null);
@@ -51,31 +51,32 @@ const Editor = () => {
   }, [text, language]);
 
   useEffect(() => {
-    if (params.id) fetchData();
-    else {
+    const fetchData = async () => {
+      const response = await fetch(`${SERVER_BASE_URL}/bin/${id}`);
+      const data = await response.json();
+      if (response.ok) {
+        setLanguage(data.language);
+        setText(data.content);
+      }
+    };
+
+    if (id) {
+      fetchData();
+    } else {
       textareaRef.current.value = "";
       setText("");
     }
-  }, [params.id]);
+  }, [id]);
 
-  const fetchData = async () => {
-    const response = await fetch(`${SERVER_BASE_URL}/bin/${params.id}`);
-    const data = await response.json();
-    if (response.ok) {
-      setLanguage(data.language);
-      setText(data.content);
-    }
-  };
-
-  const lines = text.split("\n");
+  const lines = useMemo(() => text.split("\n"), [text]);
 
   return (
     <div className={styles.container}>
-      {!params.id && (
+      {!id && (
         <>
           <select
             className={styles.languages}
-            onChange={(event) => handleLanguageChange(event)}
+            onChange={handleLanguageChange}
           >
             {Object.keys(SUPPORTED_LANGUAGES).map((language) => (
               <option
@@ -87,7 +88,7 @@ const Editor = () => {
               </option>
             ))}
           </select>
-          <button className={styles.btn__save} onClick={() => handleClick()}>
+          <button className={styles.btn__save} onClick={handleClick}>
             <img src="assets/icons/save.svg" className={styles.btn__icon} />
           </button>
         </>
@@ -110,7 +111,7 @@ const Editor = () => {
             className={styles.codespace__textarea}
             onChange={handleTextChange}
             onScroll={handleScroll}
-            hidden={params.id ? true : false}
+            style={{ display: id ? 'none' : 'block' }}
             spellCheck="false"
             ref={textareaRef}
             placeholder="Type your text here..."
