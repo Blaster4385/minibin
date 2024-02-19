@@ -10,7 +10,7 @@ const Editor = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [text, setText] = useState("");
-  const [language, setLanguage] = useState("js");
+  const [language, setLanguage] = useState("none");
   const textareaRef = useRef(null);
   const lineNumberRef = useRef(null);
 
