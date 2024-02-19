@@ -6,7 +6,6 @@ import Editor from "../../components/Editor/Editor";
 const Home = () => {
   return (
     <div className={styles.home}>
-      <Header />
       <Routes>
         <Route path="/" element={<Editor />} />
         <Route path="/:id" element={<Editor />} />

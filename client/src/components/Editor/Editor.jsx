@@ -3,7 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import Prism from "prismjs";
 import styles from "./Editor.module.css";
 import "../prism-themes/prism-gruvbox-dark.css";
-import { SERVER_BASE_URL, SUPPORTED_LANGUAGES } from "../../utils/constants";
+import { SERVER_BASE_URL } from "../../utils/constants";
+import Header from "../Header/Header";
 
 const Editor = () => {
   const { id } = useParams();
@@ -42,8 +43,8 @@ const Editor = () => {
     }
   };
 
-  const handleLanguageChange = (event) => {
-    setLanguage(event.target.value);
+  const handleLanguageChange = (value) => {
+    setLanguage(value);
   };
 
   useEffect(() => {
@@ -71,59 +72,48 @@ const Editor = () => {
   const lines = useMemo(() => text.split("\n"), [text]);
 
   return (
-    <div className={styles.container}>
-      {!id && (
-        <>
-          <select
-            className={styles.languages}
-            onChange={handleLanguageChange}
-          >
-            {Object.keys(SUPPORTED_LANGUAGES).map((language) => (
-              <option
-                className={styles.languages__option}
-                key={language}
-                value={language}
-              >
-                {SUPPORTED_LANGUAGES[language]}
-              </option>
-            ))}
-          </select>
+    <>
+      <Header isSelectVisible={!id} onLanguageChange={handleLanguageChange} />
+      <div className={styles.container}>
+        {!id && (
           <button className={styles.btn__save} onClick={handleClick}>
             <img src="assets/icons/save.svg" className={styles.btn__icon} />
           </button>
-        </>
-      )}
+        )}
 
-      <div className={styles.editor}>
-        <div
-          className={styles.line__numbers}
-          ref={lineNumberRef}
-          onScroll={handleScroll}
-        >
-          {lines.map((_, index) => (
-            <div key={index + 1} className={styles.line__number}>
-              {index + 1}
-            </div>
-          ))}
-        </div>
-        <div className={styles.codespace}>
-          <textarea
-            className={styles.codespace__textarea}
-            onChange={handleTextChange}
+        <div className={styles.editor}>
+          <div
+            className={styles.line__numbers}
+            ref={lineNumberRef}
             onScroll={handleScroll}
-            style={{ display: id ? 'none' : 'block' }}
-            spellCheck="false"
-            ref={textareaRef}
-            placeholder="Type your text here..."
-          />
-          <pre className={styles.codespace__pre}>
-            <code className={`${styles.codespace__code} language-${language}`}>
-              {text}
-            </code>
-          </pre>
+          >
+            {lines.map((_, index) => (
+              <div key={index + 1} className={styles.line__number}>
+                {index + 1}
+              </div>
+            ))}
+          </div>
+          <div className={styles.codespace}>
+            <textarea
+              className={styles.codespace__textarea}
+              onChange={handleTextChange}
+              onScroll={handleScroll}
+              style={{ display: id ? "none" : "block" }}
+              spellCheck="false"
+              ref={textareaRef}
+              placeholder="Type your text here..."
+            />
+            <pre className={styles.codespace__pre}>
+              <code
+                className={`${styles.codespace__code} language-${language}`}
+              >
+                {text}
+              </code>
+            </pre>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

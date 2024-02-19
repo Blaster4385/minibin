@@ -1,0 +1,32 @@
+.select {
+  position: relative;
+  display: inline-block;
+}
+
+.selected__option {
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  background-color: #ebdbb2;
+  z-index: 1;
+}
+
+.option {
+  padding: 10px;
+  color: #282828;
+  cursor: pointer;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
