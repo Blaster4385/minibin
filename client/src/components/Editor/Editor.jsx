@@ -25,6 +25,10 @@ const Editor = () => {
   };
 
   const handleClick = async () => {
+    if (!text) {
+      alert("Please enter some text!");
+      return;
+    }
     const response = await fetch(`${SERVER_BASE_URL}/bin`, {
       method: "POST",
       headers: {

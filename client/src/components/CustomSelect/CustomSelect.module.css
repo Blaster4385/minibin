@@ -1,32 +1,42 @@
 .select {
   position: relative;
   display: inline-block;
+  width: 12rem;
+  text-align: center;
+  background-color: var(--color-yellow);
+  color: var(--color-dark);
+  border-radius: 10px;
 }
 
 .selected__option {
   cursor: pointer;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: none;
+  display: flex;
+  justify-content: space-between;
 }
 
 .options {
   position: absolute;
-  top: 100%;
+  top: 140%;
   left: 0;
   width: 100%;
-  border: 1px solid #ccc;
-  border-top: none;
-  border-radius: 0 0 4px 4px;
-  background-color: #ebdbb2;
+  border: none;
+  border-radius: 10px;
+  background-color: var(--color-yellow);
   z-index: 1;
 }
 
 .option {
   padding: 10px;
-  color: #282828;
+  color: var(--color-dark);
+  border-bottom: var(--color-dark) 1px solid;
   cursor: pointer;
+  transition: all 0.3s ease;
   &:hover {
-    background-color: #f0f0f0;
+    scale: 1.1;
+  }
+  &:last-child {
+    border-bottom: none;
   }
 }

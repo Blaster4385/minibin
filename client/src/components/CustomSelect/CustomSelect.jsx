@@ -20,7 +20,15 @@ const CustomSelect = ({ options, onSelect }) => {
   return (
     <div className={styles.select}>
       <div className={styles.selected__option} onClick={toggleDropdown}>
-        {selectedOption ? selectedOption.label : "Select an option"}
+        {selectedOption ? (
+          <>
+            <span>&#x3c;&#x2f;&#x3e;</span>
+            <span>{selectedOption.label}</span>
+            <span>&#9660;</span>
+          </>
+        ) : (
+          "Select an option"
+        )}
       </div>
       {isOpen && (
         <div className={styles.options}>

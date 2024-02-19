@@ -6,7 +6,7 @@ import CustomSelect from "../CustomSelect/CustomSelect";
 const Header = ({ isSelectVisible, onLanguageChange }) => {
   return (
     <div className={styles.header}>
-      <h1>minibin</h1>
+      <h1><span className={styles.header__mini}>mini</span>bin</h1>
       {isSelectVisible && (
         <CustomSelect
           options={SUPPORTED_LANGUAGES}
