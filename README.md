@@ -17,47 +17,26 @@ This is a simple code sharing service and a URL shortener inspired by [katbin](h
 - [Go](https://go.dev/)
 - [SQLite](https://www.sqlite.org/)
 
-## Setup
+## Building
 
-### Client
-
-#### Install dependencies
-
+- Setup the required variables in the env file.
+- Build the binary
 ```bash
-bun install
+make minibin
 ```
 
-#### Run a development server
+#### Running
+
+Run the server.
 
 ```bash
-bun dev
-```
-
-### Server
-
-#### Run a development server
-
-```bash
-go run .
+./minibin
 ```
 
 ##### Optional flags
 
 - `--port` - The port to run the server on. Default is 8080.
 - `--db` - The path to the database file. Default is `./minibin.db`.
-
-#### Run a production server
-
-Build a binary.
-
-```bash
-go build
-```
-Run the server.
-
-```bash
-./minibin
-```
 
 ## License
 
