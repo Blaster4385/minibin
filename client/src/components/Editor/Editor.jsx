@@ -1,9 +1,14 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Prism from "prismjs";
 import styles from "./Editor.module.css";
 import "../prism-themes/prism-gruvbox-dark.css";
-import { CLIENT_BASE_URL, SERVER_BASE_URL, URL_REGEX } from "../../utils/constants";
+import "../prism-themes/prism-line-numbers.css";
+import {
+  CLIENT_BASE_URL,
+  SERVER_BASE_URL,
+  URL_REGEX,
+} from "../../utils/constants";
 import Header from "../Header/Header";
 
 const Editor = () => {
@@ -67,8 +72,7 @@ const Editor = () => {
           if (location.pathname === `/r/${id}`) {
             window.location.href = data.content;
           }
-        }
-        else {
+        } else {
           setLanguage(data.language);
           setText(data.content);
         }
@@ -83,8 +87,6 @@ const Editor = () => {
     }
   }, [id]);
 
-  const lines = useMemo(() => text.split("\n"), [text]);
-
   return (
     <>
       <Header isSelectVisible={!id} onLanguageChange={handleLanguageChange} />
@@ -96,17 +98,6 @@ const Editor = () => {
         )}
 
         <div className={styles.editor}>
-          <div
-            className={styles.line__numbers}
-            ref={lineNumberRef}
-            onScroll={handleScroll}
-          >
-            {lines.map((_, index) => (
-              <div key={index + 1} className={styles.line__number}>
-                {index + 1}
-              </div>
-            ))}
-          </div>
           <div className={styles.codespace}>
             <textarea
               className={styles.codespace__textarea}
@@ -117,11 +108,11 @@ const Editor = () => {
               ref={textareaRef}
               placeholder="</> Paste, save, share! (Pasting just a URL will shorten it!)"
             />
-            <pre className={styles.codespace__pre}>
+            <pre className="line-numbers">
               <code
                 className={`${styles.codespace__code} language-${language}`}
               >
-                {text}
+                {text + "\n"}
               </code>
             </pre>
           </div>
