@@ -15,7 +15,7 @@ pre[class*="language-"],
 code[class*="language-"] {
   /* there might be some slight offsets,
        depending on what font you select */
-  font-family: "Roboto Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
 }
 
 /* from Prism */
