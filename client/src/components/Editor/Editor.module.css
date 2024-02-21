@@ -38,12 +38,8 @@
   padding: 0 0 0 60.8px;
 }
 
-.codespace__pre {
-  background: transparent !important;
-  height: 100%;
-  width: 100%;
-  margin: 0 !important;
-  padding: 0 !important;
+.codespace__code {
+  word-break: break-word;
 }
 
 .btn__save {
