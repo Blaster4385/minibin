@@ -4,6 +4,10 @@
   align-items: center;
   margin: 0.5rem 2rem;
   color: var(--color-light);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .header h1 {
