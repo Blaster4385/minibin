@@ -24,3 +24,32 @@ h1 {
   font-size: 3rem;
   font-weight: 400;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: var(--color-dark);
+}
+
+/* For Firefox */
+::-moz-scrollbar {
+  width: 10px;
+}
+
+::-moz-scrollbar-thumb {
+  border-radius: 10px;
+  background: var(--color-dark);
+}
+
+/* For IE and Edge */
+::-ms-scrollbar {
+  width: 10px;
+}
+
+::-ms-scrollbar-thumb {
+  border-radius: 10px;
+  background: var(--color-dark);
+}
