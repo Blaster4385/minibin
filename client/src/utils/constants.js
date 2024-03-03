@@ -1,5 +1,4 @@
-export const CLIENT_BASE_URL = import.meta.env.VITE_CLIENT_BASE_URL;
-export const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
+export const BASE_URL = window.location.origin;
 export const URL_REGEX = /^(https?:\/\/)?([\w.-]+\.[a-z]{2,})(\/?[^\s]*)?$/;
 export const SUPPORTED_LANGUAGES = [
   {

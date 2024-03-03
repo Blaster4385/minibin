@@ -5,8 +5,7 @@ import styles from "./Editor.module.css";
 import "../prism-themes/prism-gruvbox-dark.css";
 import "../prism-themes/prism-line-numbers.css";
 import {
-  CLIENT_BASE_URL,
-  SERVER_BASE_URL,
+  BASE_URL,
   URL_REGEX,
 } from "../../utils/constants";
 import Header from "../Header/Header";
@@ -35,7 +34,7 @@ const Editor = () => {
       alert("Please enter some text!");
       return;
     }
-    const response = await fetch(`${SERVER_BASE_URL}/bin`, {
+    const response = await fetch(`${BASE_URL}/bin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -49,7 +48,7 @@ const Editor = () => {
     if (response.ok) {
       const isURL = URL_REGEX.test(text);
       if (isURL) {
-        navigator.clipboard.writeText(`${CLIENT_BASE_URL}/r/${data.id}`).then(
+        navigator.clipboard.writeText(`${BASE_URL}/r/${data.id}`).then(
           function () {
             alert("Short URL copied to clipboard!");
           },
@@ -63,9 +62,9 @@ const Editor = () => {
           },
         );
       } else {
-        navigator.clipboard.writeText(`${CLIENT_BASE_URL}/r/${data.id}`).then(
+        navigator.clipboard.writeText(`${BASE_URL}/r/${data.id}`).then(
           function () {
-            navigator.clipboard.writeText(`${CLIENT_BASE_URL}/${data.id}`);
+            navigator.clipboard.writeText(`${BASE_URL}/${data.id}`);
             alert("URL copied to clipboard!");
           },
           function (err) {
@@ -94,12 +93,12 @@ const Editor = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`${SERVER_BASE_URL}/bin/${id}`);
+      const response = await fetch(`${BASE_URL}/bin/${id}`);
       const data = await response.json();
       if (response.ok) {
         const isURL = URL_REGEX.test(data.content);
         if (isURL) {
-          setText(`Your shortened URL: ${CLIENT_BASE_URL}/r/${id}`);
+          setText(`Your shortened URL: ${BASE_URL}/r/${id}`);
           if (location.pathname === `/r/${id}`) {
             window.location.href = data.content;
           }
