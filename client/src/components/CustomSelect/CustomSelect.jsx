@@ -4,7 +4,7 @@ import styles from "./CustomSelect.module.css";
 const CustomSelect = ({ options, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(
-    options.length > 0 ? options[0] : null
+    options.length > 0 ? options[0] : null,
   );
 
   const toggleDropdown = () => {

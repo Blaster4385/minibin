@@ -1,15 +1,16 @@
 package main
 
 import (
+	"database/sql"
 	"embed"
 	"flag"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	"database/sql"
 	"log"
 	"math/rand"
 	"net/http"
 	"time"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -35,9 +36,9 @@ var (
 
 func RegisterHandlers(e *echo.Echo) {
 	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
-		Skipper: nil,
-		Root: "dist",
-		Index: "index.html",
+		Skipper:    nil,
+		Root:       "dist",
+		Index:      "index.html",
 		HTML5:      true,
 		Filesystem: http.FS(dist),
 	}))

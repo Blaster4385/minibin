@@ -49,29 +49,34 @@ const Editor = () => {
     if (response.ok) {
       const isURL = URL_REGEX.test(text);
       if (isURL) {
-        navigator.clipboard.writeText(`${CLIENT_BASE_URL}/r/${data.id}`).then(function () {
-          alert("Short URL copied to clipboard!");
-        }, function (err) {
-          try {
-            var successful = document.execCommand('copy');
+        navigator.clipboard.writeText(`${CLIENT_BASE_URL}/r/${data.id}`).then(
+          function () {
             alert("Short URL copied to clipboard!");
-          } catch (err) {
-            console.log('Oops, unable to copy');
-          }
-        });
-      }
-      else {
-        navigator.clipboard.writeText(`${CLIENT_BASE_URL}/r/${data.id}`).then(function () {
-          navigator.clipboard.writeText(`${CLIENT_BASE_URL}/${data.id}`);
-          alert("URL copied to clipboard!");
-        }, function (err) {
-          try {
-            var successful = document.execCommand('copy');
+          },
+          function (err) {
+            try {
+              var successful = document.execCommand("copy");
+              alert("Short URL copied to clipboard!");
+            } catch (err) {
+              console.log("Oops, unable to copy");
+            }
+          },
+        );
+      } else {
+        navigator.clipboard.writeText(`${CLIENT_BASE_URL}/r/${data.id}`).then(
+          function () {
+            navigator.clipboard.writeText(`${CLIENT_BASE_URL}/${data.id}`);
             alert("URL copied to clipboard!");
-          } catch (err) {
-            console.log('Oops, unable to copy');
-          }
-        });
+          },
+          function (err) {
+            try {
+              var successful = document.execCommand("copy");
+              alert("URL copied to clipboard!");
+            } catch (err) {
+              console.log("Oops, unable to copy");
+            }
+          },
+        );
       }
       navigate(`/${data.id}`);
     } else {

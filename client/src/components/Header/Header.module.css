@@ -19,7 +19,7 @@
   color: inherit;
 }
 
-.header__mini{
+.header__mini {
   color: var(--color-yellow);
 }
 
@@ -27,7 +27,7 @@
   .header {
     margin: 0.5rem 1rem;
   }
-  
+
   .header h1 {
     font-size: 2rem;
   }
