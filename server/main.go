@@ -45,6 +45,7 @@ func RegisterHandlers(e *echo.Echo) {
 	e.Use(middleware.CORS())
 	e.POST("/bin", postBin)
 	e.GET("/bin/:id", getBin)
+	e.GET("/r/:id", redirectToURL)
 }
 
 func main() {
@@ -94,6 +95,18 @@ func getBin(echoContext echo.Context) error {
 		return err
 	}
 	return echoContext.JSON(http.StatusOK, bin)
+}
+
+func redirectToURL(echoContext echo.Context) error {
+	id := echoContext.Param("id")
+	bin, err := getBinById(id)
+	if err != nil {
+		echoContext.Logger().Error(err)
+		return err
+	}
+
+	url := bin.Content
+	return echoContext.Redirect(http.StatusFound, url)
 }
 
 func createTable() error {

@@ -99,9 +99,6 @@ const Editor = () => {
         const isURL = URL_REGEX.test(data.content);
         if (isURL) {
           setText(`Your shortened URL: ${BASE_URL}/r/${id}`);
-          if (location.pathname === `/r/${id}`) {
-            window.location.href = data.content;
-          }
         } else {
           setLanguage(data.language);
           setText(data.content);
