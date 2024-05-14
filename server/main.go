@@ -22,6 +22,7 @@ var port string
 type Bin struct {
 	Content  string `json:"content"`
 	Language string `json:"language"`
+  IV string `json:"iv"`
 }
 
 const (
@@ -110,19 +111,19 @@ func redirectToURL(echoContext echo.Context) error {
 }
 
 func createTable() error {
-	_, err := db.Exec("CREATE TABLE IF NOT EXISTS bins (id TEXT PRIMARY KEY, content TEXT, language TEXT)")
+	_, err := db.Exec("CREATE TABLE IF NOT EXISTS bins (id TEXT PRIMARY KEY, content TEXT, language TEXT, iv TEXT)")
 	return err
 }
 
 func getBinById(id string) (Bin, error) {
-	row := db.QueryRow("SELECT content, language FROM bins WHERE id = ?", id)
+	row := db.QueryRow("SELECT content, language, iv FROM bins WHERE id = ?", id)
 	bin := Bin{}
-	err := row.Scan(&bin.Content, &bin.Language)
+	err := row.Scan(&bin.Content, &bin.Language, &bin.IV)
 	return bin, err
 }
 
 func saveBin(id string, bin Bin) error {
-	_, err := db.Exec("INSERT INTO bins (id, content, language) VALUES (?, ?, ?)", id, bin.Content, bin.Language)
+	_, err := db.Exec("INSERT INTO bins (id, content, language, iv) VALUES (?, ?, ?, ?)", id, bin.Content, bin.Language, bin.IV)
 	return err
 }
 
