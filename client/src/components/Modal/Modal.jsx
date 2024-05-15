@@ -1,15 +1,31 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import styles from "./Modal.module.css";
 
 const Modal = ({ openModal, setOpenModal, onSuccessClick, onCancelClick }) => {
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setOpenModal(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setOpenModal]);
+
   return (
     <div className={`${styles.background} ${openModal && styles.active}`}>
-      <div className={styles.container}>
+      <div ref={modalRef} className={styles.container}>
         <button
           className={styles.container__close}
           onClick={() => setOpenModal(false)}
         >
-          <img src="assets/icons/ic_close.png" className={styles.close__img} />
+          <span>&#10007;</span>
         </button>
         <p className={styles.container__title}>Encrypt content?</p>
         <div className={styles.container__actions}>
@@ -22,4 +38,3 @@ const Modal = ({ openModal, setOpenModal, onSuccessClick, onCancelClick }) => {
 };
 
 export default Modal;
-
