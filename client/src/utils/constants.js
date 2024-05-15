@@ -1,4 +1,3 @@
-export const BASE_URL = window.location.origin;
 export const URL_REGEX = /^(https?:\/\/)?([\w.-]+\.[a-z]{2,})(\/?[^\s]*)?$/;
 export const SUPPORTED_LANGUAGES = [
   {
