@@ -189,6 +189,21 @@ const Editor = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (!id && event.ctrlKey && event.key === "s") {
+        event.preventDefault();
+        handleSaveClick();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleSaveClick]);
+
   return (
     <>
       <Header isSelectVisible={!id} onLanguageChange={handleLanguageChange} />
