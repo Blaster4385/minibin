@@ -1,0 +1,60 @@
+.background {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #00000062;
+  z-index: 10;
+}
+
+.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  top: 0;
+  left: 0;
+  background-color: var(--color-dark);
+  padding: 30px;
+  border-radius: 10px;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-light);
+}
+
+.container__title {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.container__shortcuts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.container__shortcut__key {
+  color: var(--color-yellow);
+  margin-right: 15px;
+}
+
+.container__close {
+  cursor: pointer;
+  background: none;
+  border: none;
+  margin-left: auto;
+  margin-bottom: 10px;
+  color: inherit;
+  font-size: 2rem;
+  &:hover {
+    transform: scale(0.9);
+  }
+}

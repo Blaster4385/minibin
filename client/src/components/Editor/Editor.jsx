@@ -5,13 +5,13 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
+import { Link } from "react-router-dom";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Prism from "prismjs";
 import styles from "./Editor.module.css";
 import "../prism-themes/prism-gruvbox-dark.css";
 import "../prism-themes/prism-line-numbers.css";
 import { URL_REGEX } from "../../utils/constants";
-import Header from "../Header/Header";
 import {
   generateAESKey,
   keyToString,
@@ -20,6 +20,9 @@ import {
   decryptAES,
 } from "../../utils/encryption";
 import Modal from "../Modal/Modal";
+import AlertToast from "../AlertToast/AlertToast";
+import CustomSelect from "../CustomSelect/CustomSelect";
+import KeyboardModal from "../KeyboardModal/KeyboardModal";
 
 const Editor = () => {
   const { id } = useParams();
@@ -28,6 +31,8 @@ const Editor = () => {
   const [text, setText] = useState("");
   const [language, setLanguage] = useState("none");
   const [openModal, setOpenModal] = useState(false);
+  const [openKeyboardModal, setOpenKeyboardModal] = useState(false);
+  const [openAlertToast, setOpenAlertToast] = useState(false);
   const textareaRef = useRef(null);
   const lineNumberRef = useRef(null);
   const queryParams = useMemo(
@@ -48,7 +53,7 @@ const Editor = () => {
 
   const handleSaveClick = useCallback(async () => {
     if (!text) {
-      alert("Please enter some text!");
+      setOpenAlertToast(true);
       return;
     }
     if (URL_REGEX.test(text)) {
@@ -189,14 +194,67 @@ const Editor = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (!id && event.ctrlKey && event.key.toLowerCase() === "s") {
+        event.preventDefault();
+        handleSaveClick();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleSaveClick]);
+
   return (
     <>
-      <Header isSelectVisible={!id} onLanguageChange={handleLanguageChange} />
+      {!id && (
+        <>
+          <KeyboardModal
+            textAreaRef={textareaRef}
+            isOpen={openKeyboardModal}
+            setIsOpen={setOpenKeyboardModal}
+            isModalOpen={openModal}
+          />
+          <AlertToast
+            openAlertToast={openAlertToast}
+            setOpenAlertToast={setOpenAlertToast}
+          />
+        </>
+      )}
+      <div className={styles.header}>
+        <Link to="/">
+          <h1>
+            <span className={styles.header__mini}>mini</span>bin
+          </h1>
+        </Link>
+        {!id && (
+          <div className={styles.header__right}>
+            <CustomSelect
+              onSelect={handleLanguageChange}
+              textAreaRef={textareaRef}
+              isModalOpen={openModal}
+            />
+            <button className={styles.btn__help}>
+              <img
+                src="assets/icons/question.png"
+                className={styles.btn__help__icon}
+                alt="Help"
+                onClick={() => setOpenKeyboardModal(true)}
+              />
+            </button>
+          </div>
+        )}
+      </div>
       <Modal
         openModal={openModal}
         setOpenModal={setOpenModal}
         onSuccessClick={handleSuccessClick}
         onCancelClick={handleCancelClick}
+        textAreaRef={textareaRef}
       />
       <div className={styles.container}>
         {!id && (
@@ -220,6 +278,7 @@ const Editor = () => {
               ref={textareaRef}
               placeholder="</> Paste, save, share! (Pasting just a URL will shorten it!)"
               value={text}
+              disabled={openModal}
             />
             <pre className="line-numbers" ref={lineNumberRef}>
               <code

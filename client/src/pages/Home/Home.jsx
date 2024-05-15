@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import styles from "./Home.module.css";
-import Header from "../../components/Header/Header";
 import Editor from "../../components/Editor/Editor";
 
 const Home = () => {
