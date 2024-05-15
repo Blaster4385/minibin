@@ -1,0 +1,29 @@
+.background {
+  position: fixed;
+  bottom: 40px;
+  left: 40px;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.background.active {
+  opacity: 1;
+}
+
+.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  background-color: var(--color-light);
+  color: var(--color-dark);
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.container__title {
+  margin: 0;
+}

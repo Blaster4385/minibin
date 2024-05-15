@@ -42,6 +42,11 @@
   }
 }
 
+.container__title__span {
+  font-family: "JetBrains Mono", monospace;
+  color: var(--color-yellow);
+}
+
 .container__actions {
   margin-top: 20px;
   display: flex;
@@ -65,4 +70,3 @@
     transform: scale(1.1);
   }
 }
-
