@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styles from "./CustomSelect.module.css";
 
 const CustomSelect = ({ options, onSelect }) => {
@@ -6,6 +6,7 @@ const CustomSelect = ({ options, onSelect }) => {
   const [selectedOption, setSelectedOption] = useState(
     options.length > 0 ? options[0] : null,
   );
+  const selectRef = useRef(null);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -17,8 +18,21 @@ const CustomSelect = ({ options, onSelect }) => {
     setIsOpen(false);
   };
 
+  const handleClickOutside = (event) => {
+    if (selectRef.current && !selectRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className={styles.select}>
+    <div className={styles.select} ref={selectRef}>
       <div className={styles.selected__option} onClick={toggleDropdown}>
         {selectedOption ? (
           <>
