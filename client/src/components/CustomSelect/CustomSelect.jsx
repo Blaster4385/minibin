@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
+import { SUPPORTED_LANGUAGES } from "../../utils/constants";
+
 import styles from "./CustomSelect.module.css";
 
-const CustomSelect = ({ options, onSelect }) => {
+const CustomSelect = ({ onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const  [options, setOptions] = useState(SUPPORTED_LANGUAGES)
   const [selectedOption, setSelectedOption] = useState(
     options.length > 0 ? options[0] : null,
   );
@@ -23,6 +26,13 @@ const CustomSelect = ({ options, onSelect }) => {
       setIsOpen(false);
     }
   };
+
+  const handleChange = (e) => {
+    const searchVal = e.target.value;
+    searchVal.length > 0 ?
+      setOptions(SUPPORTED_LANGUAGES.filter(option => option.label.toLowerCase().includes(searchVal.toLowerCase())))
+      : setOptions(SUPPORTED_LANGUAGES)
+  }
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -45,16 +55,19 @@ const CustomSelect = ({ options, onSelect }) => {
         )}
       </div>
       {isOpen && (
-        <div className={styles.options}>
-          {options.map((option) => (
-            <div
-              key={option.value}
-              className={styles.option}
-              onClick={() => handleOptionClick(option)}
-            >
-              {option.label}
-            </div>
-          ))}
+        <div className={styles.options__container}>
+          <input onChange={handleChange} className={styles.options__search} placeholder="Search..." />
+          <div className={styles.options}>
+            {options.map((option) => (
+              <div
+                key={option.value}
+                className={styles.option}
+                onClick={() => handleOptionClick(option)}
+              >
+                {option.label}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

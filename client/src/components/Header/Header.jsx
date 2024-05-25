@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { SUPPORTED_LANGUAGES } from "../../utils/constants";
 import styles from "./Header.module.css";
 import CustomSelect from "../CustomSelect/CustomSelect";
 
@@ -14,7 +13,6 @@ const Header = ({ isSelectVisible, onLanguageChange }) => {
       </Link>
       {isSelectVisible && (
         <CustomSelect
-          options={SUPPORTED_LANGUAGES}
           onSelect={onLanguageChange}
         />
       )}
