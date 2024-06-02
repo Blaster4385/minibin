@@ -23,6 +23,7 @@ import Modal from "../Modal/Modal";
 import AlertToast from "../AlertToast/AlertToast";
 import CustomSelect from "../CustomSelect/CustomSelect";
 import KeyboardModal from "../KeyboardModal/KeyboardModal";
+import ToolTip from "../ToolTip/ToolTip";
 
 const Editor = () => {
   const { id } = useParams();
@@ -33,6 +34,7 @@ const Editor = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openKeyboardModal, setOpenKeyboardModal] = useState(false);
   const [openAlertToast, setOpenAlertToast] = useState(false);
+  const [isToolTipShown, setIsToolTipShown] = useState(false);
   const textareaRef = useRef(null);
   const lineNumberRef = useRef(null);
   const queryParams = useMemo(
@@ -144,6 +146,17 @@ const Editor = () => {
     Prism.highlightAll();
   }, [text, language]);
 
+  useEffect(() => {
+    const isToolTipShown = localStorage.getItem("isToolTipShown");
+    if (!isToolTipShown) {
+      localStorage.setItem("isToolTipShown", "true");
+      setIsToolTipShown(true);
+    }
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, []);
+
   const fetchData = useCallback(async () => {
     const response = await fetch(`${origin}/bin/${id}`);
     const data = await response.json();
@@ -211,6 +224,13 @@ const Editor = () => {
 
   return (
     <>
+      {isToolTipShown && (
+        <ToolTip
+          textAreaRef={textareaRef}
+          isOpen={isToolTipShown}
+          setIsOpen={setIsToolTipShown}
+        />
+      )}
       {!id && (
         <>
           <KeyboardModal
