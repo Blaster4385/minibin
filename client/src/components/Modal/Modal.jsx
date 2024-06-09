@@ -11,18 +11,17 @@ const Modal = ({
   const modalRef = useRef(null);
 
   useEffect(() => {
-    if (textAreaRef.current) {
-      textAreaRef.current.focus();
-    }
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setOpenModal(false);
+        textAreaRef.current.focus();
       }
     };
 
-    const handleKeyDown = (event) => {
+    const handleKeyUp = (event) => {
       if (event.key === "Escape") {
         setOpenModal(false);
+        textAreaRef.current.focus();
       } else if (
         (event.key.toLowerCase() === "y" ||
           event.key.toLowerCase() === "enter") &&
@@ -34,15 +33,17 @@ const Modal = ({
       } else if (event.key.toLowerCase() === "n" && openModal) {
         onCancelClick();
         setOpenModal(false);
+      } else {
+        textAreaRef.current.focus();
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keyup", handleKeyUp);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keydown", handleKeyUp);
     };
   }, [openModal]);
 
