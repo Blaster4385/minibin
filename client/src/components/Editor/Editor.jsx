@@ -39,7 +39,7 @@ const Editor = () => {
   const lineNumberRef = useRef(null);
   const queryParams = useMemo(
     () => new URLSearchParams(location.search),
-    [location.search],
+    [location.search]
   );
   const origin = useMemo(() => window.location.origin, []);
 
@@ -89,7 +89,7 @@ const Editor = () => {
     const keyString = await keyToString(key);
     const { encrypted, iv } = await encryptAES(text, key);
     const encryptedBase64 = btoa(
-      String.fromCharCode.apply(null, new Uint8Array(encrypted)),
+      String.fromCharCode.apply(null, new Uint8Array(encrypted))
     );
     const ivBase64 = btoa(String.fromCharCode.apply(null, iv));
 
@@ -164,12 +164,12 @@ const Editor = () => {
         const encrypted = new Uint8Array(
           atob(data.content)
             .split("")
-            .map((char) => char.charCodeAt(0)),
+            .map((char) => char.charCodeAt(0))
         ).buffer;
         const ivArray = new Uint8Array(
           atob(data.iv)
             .split("")
-            .map((char) => char.charCodeAt(0)),
+            .map((char) => char.charCodeAt(0))
         );
         const decryptedContent = await decryptAES(encrypted, key, ivArray);
         setLanguage(data.language);
@@ -206,7 +206,7 @@ const Editor = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (!id && event.ctrlKey && event.key === "s") {
+      if (!id && event.ctrlKey && event.key.toLowerCase() === "s") {
         event.preventDefault();
         handleSaveClick();
       }
